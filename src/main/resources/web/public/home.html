@@ -44,47 +44,49 @@
       {
         nome: 'Venda (F3)',
         descricao: 'Tela de vendas',
-        img: '../../assets/coesion-effect-logo.png',
+        img: '../../assets/venda.png',
       },
       {
         nome: 'Ordem de Serviço (F5)',
         descricao: 'Tela de vendas',
-        img: '../../assets/coesion-effect-logo.png',
+        img: '../../assets/ordem_servico.png',
       },
       {
         nome: 'Produtos',
         descricao: 'Tela de vendas',
-        img: '../../assets/coesion-effect-logo.png',
+        img: '../../assets/produtos.png',
+        destino: '/cadastro-produtos',
+        tituloSpawn: 'Cadastrar produtos',
       },
       {
         nome: 'Clientes',
         descricao: 'Tela de vendas',
-        img: '../../assets/coesion-effect-logo.png',
+        img: '../../assets/clientes.png',
       },
       {
         nome: 'Contas a receber',
         descricao: '(carnê)',
-        img: '../../assets/coesion-effect-logo.png',
+        img: '../../assets/contas_a_receber.png',
       },
       {
         nome: 'PDV Rápido',
         descricao: 'Tela de vendas',
-        img: '../../assets/coesion-effect-logo.png',
+        img: '../../assets/pdv.png',
       },
       {
         nome: 'Despesas',
         descricao: 'Tela de vendas',
-        img: '../../assets/coesion-effect-logo.png',
+        img: '../../assets/despesas.png',
       },
       {
         nome: 'Compras',
         descricao: 'Tela de vendas',
-        img: '../../assets/coesion-effect-logo.png',
+        img: '../../assets/compras.png',
       },
       {
         nome: 'Abertura',
         descricao: 'Tela de vendas',
-        img: '../../assets/coesion-effect-logo.png',
+        img: '../../assets/abertura.png',
       },
       {
         nome: 'Fluxo caixa',
@@ -102,6 +104,22 @@
           <h3>${item.nome}</h3>
           <p>${item.descricao}</p>
         `;
+
+      card.addEventListener('click', async () => {
+        console.log('Clicou em:', item.nome);
+        alert('Clicou em: ' + JSON.stringify(item));
+        if (item.destino != undefined) {
+          await WindowService.spawnWindow(
+            item.destino.replace('/', '').concat('.html'),
+            {
+              title: item.tituloSpawn,
+              width: 600,
+              height: 400,
+            }
+          );
+        }
+      });
+
       container.appendChild(card);
     });
   </script>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Cadastro de produts</title>
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        /* max-width: 800px; */
+      }
+      form {
+        border: 1px solid black;
+        padding: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      form .item {
+        display: flex;
+        flex-direction: column;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Cadastro de produtos</h1>
+    <form>
+      <div class="item">
+        <label for="cod">SKU (código de barras)</label>
+        <input id="cod" disabled />
+      </div>
+      <div class="item">
+        <label for="nome">Nome</label>
+        <input id="nome" value="" placeholder="" />
+      </div>
+      <div class="item">
+        <label for="unidade">Unidade</label>
+        <input id="unidade" value="" placeholder="" />
+      </div>
+      <div class="item">
+        <label for="precoCompra">Preço de compra</label>
+        <input id="precoCompra" value="" placeholder="" />
+      </div>
+      <div class="item">
+        <label for="precoVenda">Preço de venda</label>
+        <input id="precoVenda" value="" placeholder="" />
+      </div>
+      <div class="item">
+        <label for="fornecedor">Fornecedor</label>
+        <input id="fornecedor" value="" placeholder="" />
+      </div>
+      <div class="item">
+        <label for="observacoes">Observações</label>
+        <input id="observacoes" value="" placeholder="" />
+      </div>
+
+      <div class="item">
+        <label for="estoque">Estoque atual</label>
+        <input id="estoque" value="" placeholder="" />
+      </div>
+
+      <button type="button" id="salvarBtn">Salvar</button>
+    </form>
+  </body>
+
+  <script>
+    const codigoBarrasRef = document.getElementById('cod');
+    codigoBarrasRef.value = gerarCodigoBarras();
+
+    function gerarCodigoBarras() {
+      // Gera 12 dígitos aleatórios para EAN-13
+      let codigo = '';
+      for (let i = 0; i < 12; i++) {
+        codigo += Math.floor(Math.random() * 10);
+      }
+
+      // Calcula o dígito verificador
+      let soma = 0;
+      for (let i = 0; i < 12; i++) {
+        const digito = parseInt(codigo[i]);
+        soma += i % 2 === 0 ? digito * 1 : digito * 3;
+      }
+      const digitoVerificador = (10 - (soma % 10)) % 10;
+
+      // Retorna o código completo (13 dígitos)
+      return codigo + digitoVerificador;
+    }
+
+    document.getElementById('salvarBtn').addEventListener('click', () => {
+      const dados = {
+        cod: document.getElementById('cod').value,
+        nome: document.getElementById('nome').value,
+        unidade: document.getElementById('unidade').value,
+        precoCompra: document.getElementById('precoCompra').value,
+        precoVenda: document.getElementById('precoVenda').value,
+        fornecedor: document.getElementById('fornecedor').value,
+        observacoes: document.getElementById('observacoes').value,
+        estoque: document.getElementById('estoque').value,
+      };
+
+      console.log('Dados salvos:', dados);
+    });
+  </script>
+</html>
