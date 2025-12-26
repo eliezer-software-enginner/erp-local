@@ -1,0 +1,11 @@
+* {
+  -fx-font-size: 50px;
+}
+
+.button {
+  -fx-font-size: 21px;
+}
+
+.text {
+  -fx-font-size: 40px;
+}

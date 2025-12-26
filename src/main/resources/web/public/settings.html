@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Configurações</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+      }
+      .form-group {
+        margin-bottom: 15px;
+      }
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+      input,
+      select {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-sizing: border-box;
+      }
+      button {
+        padding: 10px 20px;
+        background: #28a745;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      button:hover {
+        background: #218838;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      style="
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #ddd;
+      "
+    >
+      <a
+        href="#"
+        onclick="Router.navigate('/settings'); return false;"
+        style="
+          margin-right: 15px;
+          padding: 8px 16px;
+          background: #007bff;
+          color: white;
+          text-decoration: none;
+          border-radius: 4px;
+          font-size: 14px;
+        "
+      >
+        Configurações
+      </a>
+      <a
+        href="#"
+        onclick="Router.navigate('/profile'); return false;"
+        style="
+          padding: 8px 16px;
+          background: #28a745;
+          color: white;
+          text-decoration: none;
+          border-radius: 4px;
+          font-size: 14px;
+        "
+      >
+        Ver Perfil →
+      </a>
+    </div>
+
+    <h1>Configurações</h1>
+    <p>Esta é uma janela de configurações aberta em uma nova Stage.</p>
+    <p style="color: #6c757d; font-size: 14px">
+      💡 Você pode navegar para a página de Perfil usando o botão acima!
+    </p>
+
+    <div class="form-group">
+      <label>Tema:</label>
+      <select id="theme">
+        <option value="light">Claro</option>
+        <option value="dark">Escuro</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Idioma:</label>
+      <select id="language">
+        <option value="pt-br">Português (BR)</option>
+        <option value="en">English</option>
+        <option value="es">Español</option>
+      </select>
+    </div>
+
+    <button onclick="saveSettings()">Salvar</button>
+
+    <!-- Carrega scripts necessários se ainda não estiverem carregados -->
+    <script>
+      // Função para carregar scripts sequencialmente
+      async function loadScripts() {
+        if (!window.JWB) {
+          await new Promise((resolve) => {
+            const bridgeScript = document.createElement('script');
+            bridgeScript.src = '../bridge/jwb-bridge.js';
+            bridgeScript.onload = () => {
+              console.log('[Settings] Bridge carregada');
+              const servicesScript = document.createElement('script');
+              servicesScript.src = '../bridge/services.js';
+              servicesScript.onload = () => {
+                console.log('[Settings] Services carregados');
+                resolve();
+              };
+              servicesScript.onerror = () => {
+                console.error('[Settings] Erro ao carregar services.js');
+                resolve(); // Continua mesmo se falhar
+              };
+              document.head.appendChild(servicesScript);
+            };
+            bridgeScript.onerror = () => {
+              console.error('[Settings] Erro ao carregar jwb-bridge.js');
+              resolve(); // Continua mesmo se falhar
+            };
+            document.head.appendChild(bridgeScript);
+          });
+        }
+
+        if (!window.Router) {
+          await new Promise((resolve) => {
+            const routerScript = document.createElement('script');
+            routerScript.src = '../app/router.js';
+            routerScript.onload = () => {
+              console.log('[Settings] Router carregado');
+              resolve();
+            };
+            routerScript.onerror = () => {
+              console.error('[Settings] Erro ao carregar router.js');
+              resolve(); // Continua mesmo se falhar
+            };
+            document.head.appendChild(routerScript);
+          });
+        }
+      }
+
+      // Carrega scripts imediatamente
+      loadScripts().then(() => {
+        console.log('[Settings] Todos os scripts carregados');
+      });
+    </script>
+
+    <script>
+      // Aguarda o router estar disponível e registra as rotas
+      (async function () {
+        // Aguarda os scripts estarem carregados
+        while (!window.Router || !window.FileService) {
+          await new Promise((resolve) => setTimeout(resolve, 50));
+        }
+
+        // Configura o container do router (o body inteiro neste caso)
+        Router.setContainer(document.body);
+
+        // Registra as rotas para esta janela
+        Router.register('/settings', 'settings.html');
+        Router.register('/profile', 'profile.html');
+
+        console.log('[Settings] Router configurado para esta janela');
+      })();
+
+      // Define função globalmente
+      window.saveSettings = async function () {
+        const theme = document.getElementById('theme').value;
+        const language = document.getElementById('language').value;
+        alert(`Configurações salvas!\nTema: ${theme}\nIdioma: ${language}`);
+        // Aqui você poderia chamar um serviço Java para salvar as configurações
+      };
+    </script>
+  </body>
+</html>

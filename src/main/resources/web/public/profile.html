@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Perfil do Usuário</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+      .nav {
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #ddd;
+      }
+      .nav a {
+        margin-right: 15px;
+        padding: 8px 16px;
+        background: #28a745;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        font-size: 14px;
+      }
+      .nav a:hover {
+        background: #218838;
+      }
+      .card {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+        background: #f8f9fa;
+      }
+      .profile-header {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+      .avatar {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        margin: 0 auto 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 36px;
+        font-weight: bold;
+      }
+      .info-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px solid #e9ecef;
+      }
+      .info-row:last-child {
+        border-bottom: none;
+      }
+      .info-label {
+        font-weight: bold;
+        color: #495057;
+      }
+      .info-value {
+        color: #212529;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="nav">
+      <a href="#" onclick="Router.navigate('/settings'); return false;"
+        >← Voltar para Configurações</a
+      >
+      <a href="#" onclick="Router.navigate('/profile'); return false;"
+        >Perfil</a
+      >
+    </div>
+
+    <div class="profile-header">
+      <div class="avatar">JD</div>
+      <h1>João da Silva</h1>
+      <p style="color: #6c757d">Desenvolvedor Full Stack</p>
+    </div>
+
+    <div class="card">
+      <h2>Informações Pessoais</h2>
+      <div class="info-row">
+        <span class="info-label">Email:</span>
+        <span class="info-value">joao.silva@example.com</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Telefone:</span>
+        <span class="info-value">+55 (11) 98765-4321</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Localização:</span>
+        <span class="info-value">São Paulo, Brasil</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Data de Cadastro:</span>
+        <span class="info-value">15/03/2024</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Estatísticas</h2>
+      <div class="info-row">
+        <span class="info-label">Projetos Concluídos:</span>
+        <span class="info-value">24</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Tarefas em Andamento:</span>
+        <span class="info-value">8</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Nível de Experiência:</span>
+        <span class="info-value">Sênior</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Sobre</h2>
+      <p>
+        Desenvolvedor apaixonado por tecnologia, com experiência em
+        desenvolvimento web e desktop. Especializado em Java, JavaScript e
+        arquiteturas modernas.
+      </p>
+    </div>
+
+    <!-- Carrega scripts necessários se ainda não estiverem carregados -->
+    <script>
+      // Função para carregar scripts sequencialmente
+      async function loadScripts() {
+        if (!window.JWB) {
+          await new Promise((resolve) => {
+            const bridgeScript = document.createElement('script');
+            bridgeScript.src = '../bridge/jwb-bridge.js';
+            bridgeScript.onload = () => {
+              console.log('[Profile] Bridge carregada');
+              const servicesScript = document.createElement('script');
+              servicesScript.src = '../bridge/services.js';
+              servicesScript.onload = () => {
+                console.log('[Profile] Services carregados');
+                resolve();
+              };
+              servicesScript.onerror = () => {
+                console.error('[Profile] Erro ao carregar services.js');
+                resolve();
+              };
+              document.head.appendChild(servicesScript);
+            };
+            bridgeScript.onerror = () => {
+              console.error('[Profile] Erro ao carregar jwb-bridge.js');
+              resolve();
+            };
+            document.head.appendChild(bridgeScript);
+          });
+        }
+
+        if (!window.Router) {
+          await new Promise((resolve) => {
+            const routerScript = document.createElement('script');
+            routerScript.src = '../app/router.js';
+            routerScript.onload = () => {
+              console.log('[Profile] Router carregado');
+              resolve();
+            };
+            routerScript.onerror = () => {
+              console.error('[Profile] Erro ao carregar router.js');
+              resolve();
+            };
+            document.head.appendChild(routerScript);
+          });
+        }
+      }
+
+      // Carrega scripts imediatamente
+      loadScripts().then(() => {
+        console.log('[Profile] Todos os scripts carregados');
+      });
+    </script>
+
+    <script>
+      // Aguarda o router estar disponível e registra as rotas
+      (async function () {
+        // Aguarda os scripts estarem carregados
+        while (!window.Router || !window.FileService) {
+          await new Promise((resolve) => setTimeout(resolve, 50));
+        }
+
+        // Configura o container do router (o body inteiro neste caso)
+        Router.setContainer(document.body);
+
+        // Registra as rotas para esta janela
+        Router.register('/settings', 'settings.html');
+        Router.register('/profile', 'profile.html');
+
+        console.log('[Profile] Router configurado para esta janela');
+      })();
+    </script>
+  </body>
+</html>
